@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "arduino_msgr.h"
 
@@ -18,6 +19,7 @@ int print_usage();
 int parse_command(const char* arg);
 
 int command_verbose();
+int command_baudrate();
 int command_connect();
 int command_send();
 int command_disconnect();
@@ -49,6 +51,7 @@ int print_usage()
     printf("arduino-messenger by bajsko\n"
            "available commands:\n"
            "verbose - toggle verbosity (default to 0)\n"
+           "baudrate - set baud rate (defaults to 9600)\n"
            "connect {PATH} - establish a connection to arduino serial\n"
            "send {DATA} - send data to arduino (connection must be established)\n"
            "read - prints data receieved (connection must be established)\n"
@@ -70,6 +73,8 @@ int parse_command(const char* arg)
     
     if(strcmp(cmd, "verbose") == 0)
         return command_verbose();
+    if(strcmp(cmd, "baudrate") == 0)
+        return command_baudrate();
     else if(strcmp(cmd, "connect") == 0)
         return command_connect();
     else if(strcmp(cmd, "send") == 0)
@@ -82,6 +87,17 @@ int parse_command(const char* arg)
         return command_quit();
     
     return 0;
+}
+
+int command_baudrate()
+{
+    char buff[124];
+    scanf("%s", buff);
+    
+    unsigned int baud = 0;
+    baud = (unsigned int)strtoul(buff, NULL, 10);
+    
+    return arduino_set_baud(baud);
 }
 
 int command_connect()
