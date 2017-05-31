@@ -127,6 +127,9 @@ int command_disconnect()
 
 int command_quit()
 {
+	arduino_toggle_verbose();
+	arduino_disconnect();
+
     quit = 1;
     printf("=================BYE==================\n");
     return ARDUMSGR_OK;
